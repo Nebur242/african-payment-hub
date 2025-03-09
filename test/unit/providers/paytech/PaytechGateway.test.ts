@@ -179,7 +179,6 @@ describe("PaytechGateway", () => {
       mockAxios.post.mockRejectedValueOnce(axiosError);
 
       const result = await gateway.createPayment(paymentRequest);
-      console.log(result);
 
       expect(result.success).toBe(false);
       expect(result.message).toContain("Bad request");
