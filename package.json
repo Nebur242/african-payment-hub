@@ -1,0 +1,12 @@
+{
+  "name": "african-payment-hub",
+  "version": "1.0.0",
+  "description": " a unified interface that allows developers to integrate multiple payment services (like Paytech, Cinetpay, Money Fusion) through a single package, eliminating the need to work with individual APIs",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
