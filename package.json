@@ -7,12 +7,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo test",
     "prepare": "husky",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier src/**/*.ts",
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint --fix src/**/*.ts"
+    "lint:fix": "eslint --fix src/**/*.ts",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "build": "tsc"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
