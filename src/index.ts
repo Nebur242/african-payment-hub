@@ -5,7 +5,12 @@ import {
   GatewayConfig,
   PaymentRequest,
   PaymentResponse,
+  TransactionStatus,
+  RefundResponse,
+  WebhookValidationResult,
+  WebhookEvent,
 } from "./types";
+import { PaytechGateway } from "./providers/paytech/PaytechGateway";
 // Import other gateway implementations as they are developed
 // import { CinetpayGateway } from './providers/cinetpay/CinetpayGateway';
 // import { MoneyFusionGateway } from './providers/moneyfusion/MoneyFusionGateway';
@@ -44,8 +49,7 @@ export class MultiPaymentGateway {
     // Create the appropriate gateway instance based on the provider
     switch (provider) {
       case PaymentProvider.PAYTECH:
-        // this.gateway = new PaytechGateway();
-        throw new Error("Paytech provider not yet implemented");
+        this.gateway = new PaytechGateway();
         break;
 
       case PaymentProvider.CINETPAY:
@@ -61,7 +65,7 @@ export class MultiPaymentGateway {
     }
 
     // Initialize the gateway with the provided configuration
-    // return await this.gateway.initialize(config);
+    return await this.gateway.initialize(config);
   }
 
   /**
@@ -92,7 +96,7 @@ export class MultiPaymentGateway {
    * @returns Promise resolving to the transaction status
    * @throws Error if gateway is not initialized
    */
-  async verifyPayment(paymentId: string): Promise<string> {
+  async verifyPayment(paymentId: string): Promise<TransactionStatus> {
     this.ensureInitialized();
     return await this.gateway!.verifyPayment(paymentId);
   }
@@ -105,7 +109,10 @@ export class MultiPaymentGateway {
    * @returns Promise resolving to a refund response
    * @throws Error if gateway is not initialized
    */
-  async refundPayment(paymentId: string, amount?: number): Promise<any> {
+  async refundPayment(
+    paymentId: string,
+    amount?: number
+  ): Promise<RefundResponse> {
     this.ensureInitialized();
     return await this.gateway!.refundPayment(paymentId, amount);
   }
@@ -119,9 +126,9 @@ export class MultiPaymentGateway {
    * @throws Error if gateway is not initialized
    */
   async validateWebhook(
-    payload: unknown,
+    payload: any,
     headers: Record<string, string>
-  ): Promise<unknown> {
+  ): Promise<WebhookValidationResult> {
     this.ensureInitialized();
     return await this.gateway!.validateWebhook(payload, headers);
   }
@@ -133,7 +140,7 @@ export class MultiPaymentGateway {
    * @returns Promise resolving to a standardized webhook event
    * @throws Error if gateway is not initialized
    */
-  async processWebhook(payload: unknown): Promise<unknown> {
+  async processWebhook(payload: any): Promise<WebhookEvent> {
     this.ensureInitialized();
     return await this.gateway!.processWebhook(payload);
   }
@@ -152,7 +159,11 @@ export class MultiPaymentGateway {
   }
 }
 
+// Export types for users of the package
 export * from "./types";
+
+// Export Paytech specific types for advanced usage
+export * from "./providers/paytech/types";
 
 // Create and export an instance of the MultiPaymentGateway
 export default new MultiPaymentGateway();
